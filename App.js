@@ -1,13 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react'
+import { StatusBar } from 'expo-status-bar'
+import { StyleSheet, Text, View } from 'react-native'
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+import { START, viewMap } from './views'
+
+export default App = () => {
+    const [currentView, setCurrentView] = useState(START)
+    const CurrentView = viewMap[currentView]
+
+    return (
+        <View style={styles.container}>
+            <CurrentView />
+
+            <StatusBar style="auto" />
+        </View>
+    )
 }
 
 const styles = StyleSheet.create({
@@ -17,4 +24,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+})
