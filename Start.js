@@ -1,5 +1,9 @@
 import React, { useState } from 'react'
 import { Button, Text, TextInput, View, ToastAndroid } from 'react-native'
+import axios from 'axios'
+
+const BUSTIMES_URL = 'https://bustimes.org'
+const TRIPS_ROUTE = 'api/trips'
 
 const onSubmit = (tripId, setJsonText) => () => {
     if (isNaN(tripId)) {
@@ -7,13 +11,14 @@ const onSubmit = (tripId, setJsonText) => () => {
     }
 
     ToastAndroid.show('Proceed with ' + tripId, ToastAndroid.SHORT)
-    fetch('https://bustimes.org/api/trips/' + tripId + '/?format=json').then(response =>
-        response.json()
-    ).then(json => {
-        setJsonText(JSON.stringify(json.service))
-        ToastAndroid.show('It is a service ' + json.service.line_name, ToastAndroid.SHORT)
+    axios.get(`${BUSTIMES_URL}/${TRIPS_ROUTE}/${tripId}?format=json`).then(({ data }) => {
+        console.log(data)
+        ToastAndroid.show('It is a service ' + data.service.line_name, ToastAndroid.SHORT)
+        setJsonText(data)
     }).catch(e => {
+        console.log(e)
         ToastAndroid.show('Error. ' + e, ToastAndroid.SHORT)
+        setJsonText(e)
     })
 }
 
@@ -42,7 +47,7 @@ export default Start = ({ changeViewCallback }) => {
             />
 
             <Text>
-                text={jsonText}
+                text={JSON.stringify(jsonText)}
             </Text>
         </View>
     )
