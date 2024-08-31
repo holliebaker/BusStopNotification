@@ -1,30 +1,23 @@
 import React, { useState } from 'react'
 import { Button, Text, TextInput, View, ToastAndroid } from 'react-native'
-import axios from 'axios'
 
-const BUSTIMES_URL = 'https://bustimes.org'
-const TRIPS_ROUTE = 'api/trips'
+import getTrip from './api/trip'
 
-const onSubmit = (tripId, setJsonText) => () => {
+const onSubmit = (tripId, setMessage) => () => {
     if (isNaN(tripId)) {
-        ToastAndroid.show('Invalid trip id, please enter a number.', ToastAndroid.SHORT)
+        setMessage('Invalid trip id, please enter a number.')
     }
 
-    ToastAndroid.show('Proceed with ' + tripId, ToastAndroid.SHORT)
-    axios.get(`${BUSTIMES_URL}/${TRIPS_ROUTE}/${tripId}?format=json`).then(({ data }) => {
-        console.log(data)
-        ToastAndroid.show('It is a service ' + data.service.line_name, ToastAndroid.SHORT)
-        setJsonText(data)
-    }).catch(e => {
-        console.log(e)
-        ToastAndroid.show('Error. ' + e, ToastAndroid.SHORT)
-        setJsonText(e)
-    })
+    setMessage(`Loading... (tripId = ${tripId}`)
+
+    getTrip(tripId).then(({ lineName }) => 
+        setMessage(`Retrieved line ${lineName}.`)
+    )
 }
 
 export default Start = ({ changeViewCallback }) => {
     const [tripId, setTripId] = useState('')
-    const [jsonText, setJsonText] = useState('')
+    const [message, setMessage] = useState('')
 
     return (
         <View>
@@ -43,11 +36,11 @@ export default Start = ({ changeViewCallback }) => {
 
             <Button
                 title='Go'
-                onPress={onSubmit(tripId, setJsonText)}
+                onPress={onSubmit(tripId, setMessage)}
             />
 
             <Text>
-                text={JSON.stringify(jsonText)}
+                {message}
             </Text>
         </View>
     )
