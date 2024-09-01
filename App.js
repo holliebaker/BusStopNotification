@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 
 import { START, viewMap } from './views'
 
@@ -10,7 +10,7 @@ export default App = () => {
 
     return (
         <View style={styles.container}>
-            <CurrentView />
+            <CurrentView changeViewCallback={setCurrentView}/>
 
             <StatusBar style="auto" />
         </View>

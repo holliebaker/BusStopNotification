@@ -2,17 +2,22 @@ import React, { useState } from 'react'
 import { Button, Text, TextInput, View, ToastAndroid } from 'react-native'
 
 import getTrip from './api/trip'
+import { NEXT_STOP } from './views'
 
-const onSubmit = (tripId, setMessage) => () => {
+const onSubmit = (tripId, setMessage, changeViewCallback) => () => {
     if (isNaN(tripId)) {
         setMessage('Invalid trip id, please enter a number.')
     }
 
-    setMessage(`Loading... (tripId = ${tripId}`)
+    setMessage('Loading...')
 
-    getTrip(tripId).then(({ lineName }) => 
-        setMessage(`Retrieved line ${lineName}.`)
-    )
+    getTrip(tripId).then((info) => 
+        changeViewCallback(NEXT_STOP, info)
+    ).catch(e => {
+        console,log(e)
+
+        setMessage('Unexpected error occurreed.')
+    })
 }
 
 export default Start = ({ changeViewCallback }) => {
@@ -36,7 +41,7 @@ export default Start = ({ changeViewCallback }) => {
 
             <Button
                 title='Go'
-                onPress={onSubmit(tripId, setMessage)}
+                onPress={onSubmit(tripId, setMessage, changeViewCallback)}
             />
 
             <Text>
