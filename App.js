@@ -1,22 +1,20 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { Provider, connect } from 'react-redux'
 import { StatusBar } from 'expo-status-bar'
 import { StyleSheet, View } from 'react-native'
 
-import { START, viewMap } from './views'
+import store from './store'
+import { START, NEXT_STOP } from './views'
+import Start from './Start'
+import NextStop from './NextStop'
 
-export default App = () => {
-    const [currentView, setCurrentView] = useState(START)
-    const CurrentView = viewMap[currentView]
-
-    return (
-        <View style={styles.container}>
-            <CurrentView changeViewCallback={setCurrentView}/>
-
-            <StatusBar style="auto" />
-        </View>
-    )
+// view map
+const viewMap = {
+    [START]: Start,
+    [NEXT_STOP]: NextStop
 }
 
+// styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -25,3 +23,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
 })
+
+// main "app" component
+const App = ({ currentView }) => {
+    console.log(currentView)
+    const CurrentView = viewMap[currentView]
+
+    return (
+        <View style={styles.container}>
+            <CurrentView />
+
+            <StatusBar style="auto" />
+        </View>
+    )
+}
+
+const ReduxApp = connect(state => ({ currentView: state.currentView }))(App)
+
+// redux store provider
+export default StuffThings = () => (
+    <Provider store={store} >
+        <ReduxApp />
+    </Provider>
+)
