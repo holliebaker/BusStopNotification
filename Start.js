@@ -4,16 +4,14 @@ import { connect } from 'react-redux'
 import getTrip from './api/trip'
 import { NEXT_STOP } from './views'
 import * as errors from './network-errors'
-import { setCurrentView, setInputError, setNetworkError, clearError, setLoading, setTripId } from './actions'
+import { setCurrentView, setInputError, setNetworkError, clearError, setLoading, setTripId, setTripData } from './actions'
 
 const onSubmit = (
-    clearError, setLoading, setInputError, setNetworkError, setCurrentView
+    clearError, setLoading, setInputError, setNetworkError, setTripData, setCurrentView
 ) => tripIdText => {
     const tripId = +tripIdText
-    console.log('submit ', tripId)
 
     if (isNaN(tripId)) {
-        console.log('input error')
         setInputError()
 
         return
@@ -21,12 +19,14 @@ const onSubmit = (
 
     setLoading(true)
     
-    getTrip(tripId).then(results => {
+    getTrip(tripId).then(data => {
         clearError()
         
+        setTripData(data)
         setCurrentView(NEXT_STOP)
     }).catch(e => {
         console.log(e)
+        console.log(err.stack)
 
         setNetworkError()
     })
@@ -52,6 +52,7 @@ const Start = ({
     tripId,
     message,
     setTripId,
+    setTripData,
     clearError,
     setLoading,
     setInputError,
@@ -74,7 +75,7 @@ const Start = ({
 
         <Button
             title='Go'
-            onPress={_ => onSubmit(clearError, setLoading, setInputError, setNetworkError, setCurrentView)(tripId)}
+            onPress={_ => onSubmit(clearError, setLoading, setInputError, setNetworkError, setTripData, setCurrentView)(tripId)}
         />
 
         <Text>
@@ -90,6 +91,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     setTripId,
+    setTripData,
     clearError,
     setLoading,
     setInputError,

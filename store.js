@@ -7,9 +7,12 @@ import { NO_ERROR } from './network-errors'
 // initial state
 const initialState = {
     currentView: START,
-    tripId: 100,
+    tripId: '',
     isLoading: false,
-    error: NO_ERROR
+    error: NO_ERROR,
+    ServiceWorkerContainer: null,
+    destination: null,
+    upcomingStops: [],
 }
 
 // reducer
@@ -38,6 +41,14 @@ const reducer = (state = initialState, action) => {
                 ...state, 
                 loading: false,
                 error: action.payload
+            }
+
+        case actions.SET_TRIP_DATA:
+            return {
+                ...state,
+                serviceNumber: action.payload.serviceNumber,
+                destination: action.payload.destination,
+                upcomingStops: action.payload.upcomingStops
             }
 
         default:

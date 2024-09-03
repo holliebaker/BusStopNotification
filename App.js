@@ -1,7 +1,6 @@
 import React from 'react'
 import { Provider, connect } from 'react-redux'
-import { StatusBar } from 'expo-status-bar'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, SafeAreaView, StatusBar } from 'react-native'
 
 import store from './store'
 import { START, NEXT_STOP } from './views'
@@ -17,6 +16,7 @@ const viewMap = {
 // styles
 const styles = StyleSheet.create({
   container: {
+    marginTop: StatusBar.currentHeight || 0,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
@@ -25,24 +25,22 @@ const styles = StyleSheet.create({
 })
 
 // main "app" component
-const App = ({ currentView }) => {
-    console.log(currentView)
-    const CurrentView = viewMap[currentView]
+const App = connect(state => ({ currentView: state.currentView }))(
+    ({ currentView }) => {
+        console.log(currentView)
+        const CurrentView = viewMap[currentView]
 
-    return (
-        <View style={styles.container}>
-            <CurrentView />
-
-            <StatusBar style="auto" />
-        </View>
-    )
-}
-
-const ReduxApp = connect(state => ({ currentView: state.currentView }))(App)
+        return (
+            <SafeAreaView style={styles.container}>
+                <CurrentView />
+            </SafeAreaView>
+        )
+    }
+)
 
 // redux store provider
-export default StuffThings = () => (
+export default () => (
     <Provider store={store} >
-        <ReduxApp />
+        <App />
     </Provider>
 )
