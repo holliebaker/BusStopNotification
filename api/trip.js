@@ -7,8 +7,6 @@ const VEHICLE_JOPRNEYS_ROUTE = 'api/vehiclejourneys'
 // returns a formatted list of upcoming stops based on vehicle progress
 const findUpcomingStops = (progress, stops) => {
     const nextStopIndex = stops.findIndex(item => item.stop.atco_code == progress.next_stop)
-    
-    console.log(JSON.stringify(stops[0], null, 2))
 
     return stops.slice(nextStopIndex).map(item => ({
         key: item.stop.atco_code,
@@ -37,6 +35,7 @@ export default async tripId => {
         })
 
     if (!vehicles.length) throw Error('No corresponding vehicle found.')
+    console.log(JSON.stringify(vehicles[0], null, 2))
 
     return {
         serviceNumber: journey.route_name,

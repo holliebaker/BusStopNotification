@@ -2,22 +2,29 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { Text, View, FlatList } from 'react-native'
 
-const Stop = ({ data }) => (
-    <View>
-        <Text>{data.name}</Text>
+import styles from './styles'
 
-        <Text>{data.time}</Text>
+const Stop = ({ item }) => (
+    <View>
+        <Text>{item.name}</Text>
+
+        <Text>{item.time}</Text>
     </View>
 )
 
 const NextStop = ({ serviceNumber, destination, upcomingStops }) => {
     return (
         <View>
-            <Text>{serviceNumber} to {destination}</Text>
+            <View style={{ ...styles.padded, ...styles.nextStopHeader }}>
+                <Text style={styles.textAlternative}>
+                    {serviceNumber} to {destination}
+                </Text>
+            </View>
 
             <FlatList 
+                style={{ ...styles.padded, ...styles.fill }}
                 data={upcomingStops}
-                renderItem={({ item }) => (<Stop data={item} />)}
+                renderItem={Stop}
             />
         </View>
     )

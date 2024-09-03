@@ -1,6 +1,7 @@
 import { Button, Text, TextInput, View, } from 'react-native'
 import { connect } from 'react-redux'
 
+import styles, { colours } from './styles'
 import getTrip from './api/trip'
 import { NEXT_STOP } from './views'
 import * as errors from './network-errors'
@@ -26,8 +27,7 @@ const onSubmit = (
         setCurrentView(NEXT_STOP)
     }).catch(e => {
         console.log(e)
-        console.log(err.stack)
-
+        
         setNetworkError()
     })
 }
@@ -50,6 +50,7 @@ const generateMessage = (isLoading, error) => {
 
 const Start = ({ 
     tripId,
+    isLoading,
     message,
     setTripId,
     setTripData,
@@ -59,7 +60,7 @@ const Start = ({
     setNetworkError,
     setCurrentView
  }) => (
-    <View>
+    <View style={styles.padded} >
         <Text>Please enter trip id:</Text>
 
         <TextInput
@@ -75,6 +76,8 @@ const Start = ({
 
         <Button
             title='Go'
+            color={colours.primary}
+            disabled={isLoading}
             onPress={_ => onSubmit(clearError, setLoading, setInputError, setNetworkError, setTripData, setCurrentView)(tripId)}
         />
 
@@ -86,6 +89,7 @@ const Start = ({
 
 const mapStateToProps = state => ({
     tripId: state.tripId,
+    isLoading: state.loading,
     message: generateMessage(state.loading, state.error),
 })
 
