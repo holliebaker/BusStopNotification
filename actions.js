@@ -6,6 +6,7 @@ export const SET_TRIP_ID = 'SET_TRIP_ID'
 export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR'
 export const SET_TRIP_DATA = 'SET_TRIP_DATA'
+export const SET_VEHICLE_PROGRESS = 'SET_VEHICLE_PROGRESS'
 
 // action creators
 export const setCurrentView = view => ({ type: SET_CURRENT_VIEW, payload: view })
@@ -15,3 +16,4 @@ export const setInputError = () => ({ type: SET_ERROR, payload: errors.INPUT_ERR
 export const setNetworkError = () => ({ type: SET_ERROR, payload: errors.NETWORK_ERROR })
 export const clearError = () => ({ type: SET_ERROR, payload: errors.NO_ERROR })
 export const setTripData = data => ({ type: SET_TRIP_DATA, payload: data })
+export const setVehicleProgress = progress => ({ type: SET_VEHICLE_PROGRESS, payload: progress })

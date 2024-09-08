@@ -2,6 +2,7 @@ import { StyleSheet, StatusBar } from 'react-native'
 
 export const colours = {
     background: 'whitesmoke',
+    backgroundAlt: 'lightgrey',
     primary: 'midnightblue',
     text: 'black',
     textAlternative: 'white',
@@ -14,7 +15,7 @@ export default StyleSheet.create({
         flex: 1,
         backgroundColor: colours.background,
         alignItems: 'stretch',
-        justifyContent: 'center',
+        justifyContent: 'flex-start',
     },
     padded: {
         paddingTop: 10,
@@ -22,14 +23,26 @@ export default StyleSheet.create({
         paddingLeft: 10,
         paddingRight: 10,
     },
-    flexStart: { alignItems: 'flexStart' },
+    margins: {
+        marginTop: 10,
+        marginBottom: 10,
+        marginLeft: 10,
+        marginRight: 10,
+    },
+
+    center: { marginLeft: 'auto', marginRight: 'auto' },
     fill: { flexGrow: 1 },
     nextStopHeader: {
         backgroundColor: colours.primary,
-        //flexDirection: 'horizontal',
-
+        alignItems: 'center',
     },
-    textAlternative: {
-        color: colours.textAlternative,
+    flexRow: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'start',
     },
+    textPrimary: { color: colours.primary },
+    textAlternative: { color: colours.textAlternative },
+    textSecondary: { color: colours.textSecondary },
 })

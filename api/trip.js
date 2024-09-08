@@ -4,17 +4,15 @@ const BUSTIMES_URL = 'https://bustimes.org'
 const TRIPS_ROUTE = 'api/trips'
 const VEHICLE_JOPRNEYS_ROUTE = 'api/vehiclejourneys'
 
-// returns a formatted list of upcoming stops based on vehicle progress
-const findUpcomingStops = (progress, stops) => {
-    const nextStopIndex = stops.findIndex(item => item.stop.atco_code == progress.next_stop)
+// format stop data
+const formatStops = stops => stops.map(item => ({
+    id: item.id,
+    atcoCode: item.stop.atco_code,
+    name: item.stop.name,
+    bearing: item.stop.bearing,
+    time: item.aimed_arrival_time || item.aimed_departure_time,
+}))
 
-    return stops.slice(nextStopIndex).map(item => ({
-        key: item.stop.atco_code,
-        name: item.stop.name,
-        bearing: item.stop.bearing,
-        time: item.aimed_arrival_time || item.aimed_departure_time,
-    }))
-}
 
 export default async tripId => {
     const [ trip, vehicleJourneys ] = await Promise.all([
@@ -25,21 +23,14 @@ export default async tripId => {
     })
     
     // extract the vehicle journey corresponding to the trip
-    if (!vehicleJourneys.results?.length) throw Error('Cannot find vehicle journey.')
-    const journey = vehicleJourneys.results[0]
-    const vehicleId = journey.vehicle.id
-
-    const vehicles = await axios.get(`${BUSTIMES_URL}/vehicles.json?id=${vehicleId}`)
-        .then(({ data }) => data).catch(e => {
-            throw e
-        })
-
-    if (!vehicles.length) throw Error('No corresponding vehicle found.')
-    console.log(JSON.stringify(vehicles[0], null, 2))
+    const journey = vehicleJourneys.results[0] || null
+    const stops = formatStops(trip.times)
+    const lastStop = stops.slice(-1)[0]
 
     return {
-        serviceNumber: journey.route_name,
-        destination: journey.destination,
-        upcomingStops: findUpcomingStops(vehicles[0].progress, trip.times)
+        serviceNumber: journey?.route_name || trip.service.line_name,
+        destination: { to: journey?.destination || lastStop.name, stop: lastStop.name, time: lastStop.time },
+        vehicleId: journey?.vehicle.id || null,
+        stops
     }
 }

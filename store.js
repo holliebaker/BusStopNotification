@@ -10,9 +10,11 @@ const initialState = {
     tripId: '',
     isLoading: false,
     error: NO_ERROR,
-    ServiceWorkerContainer: null,
+    vehicleId: null,
+    vehicleProgress: null,
+    serviceNumber: null,
     destination: null,
-    upcomingStops: [],
+    stops: [],
 }
 
 // reducer
@@ -46,9 +48,17 @@ const reducer = (state = initialState, action) => {
         case actions.SET_TRIP_DATA:
             return {
                 ...state,
+                vehicleId: action.payload.vehicleId,
                 serviceNumber: action.payload.serviceNumber,
                 destination: action.payload.destination,
-                upcomingStops: action.payload.upcomingStops
+                stops: action.payload.stops
+            }
+
+        case actions.SET_VEHICLE_PROGRESS:
+            console.log('setting vehicle progress', action.payload)
+            return {
+                ...state,
+                vehicleProgress: action.payload,
             }
 
         default:
