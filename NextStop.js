@@ -27,15 +27,20 @@ const getUpcomingStops = (stops, progress) => {
 
     const now = Date.now() // milliseconds since unix epoch
     const today = new Date() // today's date object
+    let calculateTimings = true // whether to calculate timings -- we only do next 10 minutes
 
     const stopIndex = stops.findIndex(({ atcoCode }) => atcoCode == progress.nextStop)
+
     return stops.slice(stopIndex).map(stop => {
+        if (!calculateTimings) return stop
+
         const time = stop.time
         const [hh, mm] = time.split(':').map(t => +t)
         today.setHours(hh)
         today.setMinutes(mm)
         const minutes = Math.floor((today.getTime() - now + (progress.delay * 1000)) / 60000)
-        console.log(stop.name, minutes)
+        calculateTimings = minutes < 10
+
         return { ...stop, minutes }
     })
 }
