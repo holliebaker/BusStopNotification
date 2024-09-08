@@ -8,6 +8,11 @@ export const SET_LOADING = 'SET_LOADING';
 export const SET_ERROR = 'SET_ERROR'
 export const SET_TRIP_DATA = 'SET_TRIP_DATA'
 export const SET_VEHICLE_PROGRESS = 'SET_VEHICLE_PROGRESS'
+export const ADD_FAVOURITE = 'ADD_FAVOURITE'
+export const REMOVE_FAVOURITE = 'REMOVE_FAVOURITE'
+export const CLEAR_FAVOURITES = 'CLEAR_FAVOURITES'
+export const ADD_FAV_TRIPS = 'ADD_FAV_TRIPS'
+export const CLEAR_FAV_TRIPS = 'CLEAR_FAV_TRIPS'
 
 // action creators
 export const reset = () => ({ type: RESET })
@@ -19,3 +24,8 @@ export const setNetworkError = () => ({ type: SET_ERROR, payload: errors.NETWORK
 export const clearError = () => ({ type: SET_ERROR, payload: errors.NO_ERROR })
 export const setTripData = data => ({ type: SET_TRIP_DATA, payload: data })
 export const setVehicleProgress = progress => ({ type: SET_VEHICLE_PROGRESS, payload: progress })
+export const addFavourite = service => ({ type: ADD_FAVOURITE, payload: service })
+export const removeFavourite = id => ({ type: REMOVE_FAVOURITE, payload: id })
+export const clearFavourites = () => ({ type: CLEAR_FAVOURITES })
+export const addFavouriteTrips = trips => ({ type: ADD_FAV_TRIPS, payload: trips })
+export const clearFavouriteTrips = () => ({ type: CLEAR_FAV_TRIPS })

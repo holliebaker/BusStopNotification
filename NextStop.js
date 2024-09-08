@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { Text, View, Button, FlatList } from 'react-native'
 
 import styles, { colours } from './styles'
-import { clearError, setLoading, setNetworkError, setVehicleProgress } from './actions'
+import { clearError, setLoading, setNetworkError, setVehicleProgress, addFavourite, removeFavourite } from './actions'
 import getVehicle from './api/vehicle'
 import ButtonTransparent from './ButtonTransparent'
+import ListEmpty from './ListEmpty'
+import { storeFavourite, removeStoredFavourite } from './persist'
 
 const onSubmit = (
     clearError, setLoading, setNetworkError, setVehicleProgress
@@ -70,6 +72,22 @@ const generateAccessibilityLabel = item => {
     return `${stopDetails} Due in ${pluralise(item.minutes, 'minute', 'minutes')}`
 }
 
+const toggleFavourite = (addFavourite, removeFavourite) => (isFavourite, serviceId, serviceNumber, destination) => {
+    if (isFavourite) {
+        removeStoredFavourite(serviceId)
+            .then(_ => removeFavourite(serviceId))
+            .catch(e => console.log(e))
+
+            return
+    }
+
+    const fav = { id: serviceId, serviceNumber, destination }
+    storeFavourite(fav)
+        .then(_ => addFavourite(fav))
+        .catch(e => console.log(e))
+
+}
+
 const Stop = ({ item, index }) => (
     <View
         accessibilityLabel={generateAccessibilityLabel(item)}
@@ -84,16 +102,14 @@ const Stop = ({ item, index }) => (
         <View>
             <Text>{item.minutes && (item.minutes < 1 ? 'Due' : (item.minutes + ' min'))}</Text>
 
-            <Text style={item.minutes && styles.textSecondary} >{item.time}</Text>
+            <Text style={item.minutes && styles.textSecondary}>{item.time}</Text>
         </View>
     </View>
 )
 
-const ListEmpty = () => (
-    <Text style={{ ...styles.center, ...styles.textSecondary }}>No stop data available.</Text>
-)
-
 const NextStop = ({
+    isFavourite,
+    serviceId,
     isLoading,
     vehicleId,
     serviceNumber,
@@ -103,8 +119,15 @@ const NextStop = ({
     clearError, 
     setLoading,
     setNetworkError,
-    setVehicleProgress
+    setVehicleProgress,
+    addFavourite,
+    removeFavourite
 }) => {
+    const curriedSubmit = onSubmit(clearError, setLoading, setNetworkError, setVehicleProgress)
+    useEffect(() => {
+        curriedSubmit(vehicleId)
+    }, [])
+
     return (
         <View>
             <View style={{ ...styles.padded, ...styles.nextStopHeader }}>
@@ -123,13 +146,22 @@ const NextStop = ({
                         </Text>
                     </View>
 
-                    <ButtonTransparent
-                        title='⟳'
-                        accessibilityLabel='Refresh'
-                        color={colours.textAlternative}
-                        disabled={isLoading}
-                        onPress={_ => onSubmit(clearError, setLoading, setNetworkError, setVehicleProgress)(vehicleId)}
-                    />
+                    <View>
+                        <ButtonTransparent
+                            title='⟳'
+                            accessibilityLabel='Refresh'
+                            color={colours.textAlternative}
+                            disabled={isLoading}
+                            onPress={_ => curriedSubmit(vehicleId)}
+                        />
+
+                        <ButtonTransparent
+                            title={isFavourite ? '★' : '☆'}
+                            accessibilityLabel={(isFavourite ? 'Add' : 'Remove') + ' favourite'}
+                            color={colours.textAlternative}
+                            onPress={_ => toggleFavourite(addFavourite, removeFavourite)(isFavourite, serviceId, serviceNumber, destination.to)}
+                        />
+                    </View>
                 </View>
                 
                 <Text style={styles.textAlternative}>
@@ -141,13 +173,16 @@ const NextStop = ({
                 data={stops}
                 keyExtractor={({ id }) => id}
                 renderItem={Stop}
-                ListEmptyComponent={ListEmpty}
+                ListEmptyComponent={ListEmpty({ text: 'No stop data available.' })}
             />
         </View>
     )
+
 }
 
 const mapStateToProps = state => ({
+    isFavourite: !!state.favServices.find(({ id }) => id === state.serviceId),
+    serviceId: state.serviceId,
     isLoading: state.loading,
     vehicleId: state.vehicleId,
     serviceNumber: state.serviceNumber,
@@ -161,6 +196,8 @@ const mapDispatchToProps = {
     setLoading,
     setNetworkError,
     setVehicleProgress,
+    addFavourite,
+    removeFavourite,
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(NextStop)

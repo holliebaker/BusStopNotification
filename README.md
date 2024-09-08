@@ -57,11 +57,11 @@ How the thing works
 - GET /api/vehiclejourneys?trip=<trip_id>
 - GET /vehicles.json?id=<v_id>
 
-- Retrieve all the data, 
+- Retrieve all the data,
 - Load the list of stops,
 - Change view
 - Load the vehicle
 - have a reload button to reload the vehicle.
 - from that figure out the stops
 
-
+add faves

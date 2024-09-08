@@ -21,7 +21,7 @@ const Header = connect(state => ({ showBack: state.currentView != START }), { go
     ({ showBack, goBack }) => (
         <View style={{ ...styles.padded, ...styles.flexRow }}>
             {showBack && <ButtonTransparent
-                title='←'
+                title='Back'
                 accessibilityLabel='Back'
                 onPress={_ => goBack()}
             />}

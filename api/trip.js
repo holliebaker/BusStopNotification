@@ -21,13 +21,15 @@ export default async tripId => {
     ]).then(res => res.map(({ data }) => data)).catch(e => {
         throw e
     })
-    
+
     // extract the vehicle journey corresponding to the trip
     const journey = vehicleJourneys.results[0] || null
+
     const stops = formatStops(trip.times)
     const lastStop = stops.slice(-1)[0]
 
     return {
+        serviceId: trip.service.id,
         serviceNumber: journey?.route_name || trip.service.line_name,
         destination: { to: journey?.destination || lastStop.name, stop: lastStop.name, time: lastStop.time },
         vehicleId: journey?.vehicle.id || null,

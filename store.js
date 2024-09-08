@@ -8,10 +8,13 @@ import { NO_ERROR } from './network-errors'
 const initialState = {
     currentView: START,
     tripId: '',
+    favServices: [],
+    favTrips: [],
     isLoading: false,
     error: NO_ERROR,
     vehicleId: null,
     vehicleProgress: null,
+    serviceId: null,
     serviceNumber: null,
     destination: null,
     stops: [],
@@ -52,17 +55,47 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 vehicleId: action.payload.vehicleId,
+                serviceId: action.payload.serviceId,
                 serviceNumber: action.payload.serviceNumber,
                 destination: action.payload.destination,
                 stops: action.payload.stops
             }
 
         case actions.SET_VEHICLE_PROGRESS:
-            console.log('setting vehicle progress', action.payload)
             return {
                 ...state,
                 vehicleProgress: action.payload,
             }
+
+        case actions.ADD_FAVOURITE:
+            return {
+                ...state,
+                favServices: [ ...state.favServices, action.payload ],
+            }
+
+        case actions.REMOVE_FAVOURITE:
+            return {
+                ...state,
+                favServices: state.favServices.filter(({ id }) => id === action.paylad)
+            }
+
+        case actions.CLEAR_FAVOURITES:
+            return {
+                ...state,
+                favServices: [],
+            }
+
+    case actions.CLEAR_FAV_TRIPS:
+        return {
+            ...state,
+            favTrips: []
+        }
+        
+    case actions.ADD_FAV_TRIPS:
+        return {
+            ...state,
+            favTrips: [ ...state.favTrips, ...action.payload ]
+        }
 
         default:
             return state
