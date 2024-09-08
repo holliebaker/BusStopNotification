@@ -20,7 +20,10 @@ const initialState = {
 // reducer
 const reducer = (state = initialState, action) => {
     switch (action.type) {
-        case actions.SET_CURRENT_VIEW:
+        case actions.RESET:
+            return initialState
+
+            case actions.SET_CURRENT_VIEW:
             return {
                 ...state,
                 currentView: action.payload

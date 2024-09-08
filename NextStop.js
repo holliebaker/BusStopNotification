@@ -5,6 +5,7 @@ import { Text, View, Button, FlatList } from 'react-native'
 import styles, { colours } from './styles'
 import { clearError, setLoading, setNetworkError, setVehicleProgress } from './actions'
 import getVehicle from './api/vehicle'
+import ButtonTransparent from './ButtonTransparent'
 
 const onSubmit = (
     clearError, setLoading, setNetworkError, setVehicleProgress
@@ -21,6 +22,9 @@ const onSubmit = (
         setNetworkError()
     })
 }
+
+const pluralise = (num, singular, plural) =>
+    `${num} ${Math.abs(num) == 1 ? singular : plural}`
 
 const getUpcomingStops = (stops, progress) => {
     if (!progress) return stops
@@ -53,11 +57,24 @@ const getTimingMessage = progress => {
 
     const norm = Math.abs(minutes)
     const qualifier = minutes > 0 ? 'late' : 'early'
-    return `${norm} minute${norm > 1 ? 's' : ''} ${qualifier}`
+    return `${pluralise(norm, 'minute', 'minutes')} ${qualifier}`
+}
+
+const generateAccessibilityLabel = item => {
+    const stopDetails = `${item.name}, scheduled at ${item.time}.`
+
+    if (!item.minutes) return stopDetails
+
+    if (item.minutes < 1) return stopDetails + ' Bus is due.'
+
+    return `${stopDetails} Due in ${pluralise(item.minutes, 'minute', 'minutes')}`
 }
 
 const Stop = ({ item, index }) => (
-    <View style={{ ...styles.flexRow, ...styles.padded, backgroundColor: index % 2 ? colours.backgroundAlt : colours.background }}>
+    <View
+        accessibilityLabel={generateAccessibilityLabel(item)}
+        style={{ ...styles.flexRow, ...styles.padded, backgroundColor: index % 2 ? colours.backgroundAlt : colours.background }}
+    >
         <View>
             <Text numberOfLines={2} ellipsizeMode='tail'>
                 {item.name}
@@ -106,9 +123,10 @@ const NextStop = ({
                         </Text>
                     </View>
 
-                    <Button
+                    <ButtonTransparent
                         title='⟳'
-                        color={colours.textSecondary}
+                        accessibilityLabel='Refresh'
+                        color={colours.textAlternative}
                         disabled={isLoading}
                         onPress={_ => onSubmit(clearError, setLoading, setNetworkError, setVehicleProgress)(vehicleId)}
                     />
