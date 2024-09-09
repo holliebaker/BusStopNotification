@@ -67,9 +67,14 @@ const Favourite = handlePress => ({ item }) => (
                 </Text>
             </View>
 
-            <Text style={styles.textSecondary}>
-                {item.date}
-            </Text>
+            <View style={styles.flexRow}>
+                <Text style={styles.textSecondary}>
+                    {item.date.toLocaleTimeString()}
+                </Text>
+                <Text style={styles.textSecondary}>
+                    ({item.tripId})
+                </Text>
+            </View>
         </View>
     </TouchableHighlight>
 )
@@ -153,7 +158,7 @@ const Start = ({
 
             <FlatList
                 data={faves}
-                keyExtractor={({ tripId }) => tripId}
+                keyExtractor={({ id }) => id}
                 renderItem={Favourite(curriedSubmit)}
                 ListEmptyComponent={ListEmpty({ text: 'No favourites yet.' })}
             />

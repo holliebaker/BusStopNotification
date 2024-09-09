@@ -9,6 +9,8 @@ import ButtonTransparent from './ButtonTransparent'
 import ListEmpty from './ListEmpty'
 import { storeFavourite, removeStoredFavourite } from './persist'
 
+const REFRESH_INTERVAL = 30000
+
 const onSubmit = (
     clearError, setLoading, setNetworkError, setVehicleProgress
 ) => vehicleId => {
@@ -125,6 +127,12 @@ const NextStop = ({
 }) => {
     const curriedSubmit = onSubmit(clearError, setLoading, setNetworkError, setVehicleProgress)
     useEffect(() => {
+        setInterval(
+            curriedSubmit,
+            REFRESH_INTERVAL,
+            vehicleId
+        )
+
         curriedSubmit(vehicleId)
     }, [])
 
@@ -187,7 +195,7 @@ const mapStateToProps = state => ({
     vehicleId: state.vehicleId,
     serviceNumber: state.serviceNumber,
     destination: state.destination,
-    timingMessage: getTimingMessage(state.vehicleProgress),
+    timingMessage: state.loading ? 'Loading...' : getTimingMessage(state.vehicleProgress),
     stops: getUpcomingStops(state.stops, state.vehicleProgress),
 })
 
