@@ -9,7 +9,7 @@ import ButtonTransparent from './ButtonTransparent'
 import ListEmpty from './ListEmpty'
 import { storeFavourite, removeStoredFavourite } from './persist'
 
-const REFRESH_INTERVAL = 30000
+const REFRESH_INTERVAL = 300000
 
 const onSubmit = (
     clearError, setLoading, setNetworkError, setVehicleProgress
