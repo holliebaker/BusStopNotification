@@ -11,8 +11,7 @@ export const SET_VEHICLE_PROGRESS = 'SET_VEHICLE_PROGRESS'
 export const ADD_FAVOURITE = 'ADD_FAVOURITE'
 export const REMOVE_FAVOURITE = 'REMOVE_FAVOURITE'
 export const CLEAR_FAVOURITES = 'CLEAR_FAVOURITES'
-export const ADD_FAV_TRIPS = 'ADD_FAV_TRIPS'
-export const CLEAR_FAV_TRIPS = 'CLEAR_FAV_TRIPS'
+export const SET_FAV_TRIPS = 'SET_FAV_TRIPS'
 
 // action creators
 export const reset = () => ({ type: RESET })
@@ -27,5 +26,4 @@ export const setVehicleProgress = progress => ({ type: SET_VEHICLE_PROGRESS, pay
 export const addFavourite = service => ({ type: ADD_FAVOURITE, payload: service })
 export const removeFavourite = id => ({ type: REMOVE_FAVOURITE, payload: id })
 export const clearFavourites = () => ({ type: CLEAR_FAVOURITES })
-export const addFavouriteTrips = trips => ({ type: ADD_FAV_TRIPS, payload: trips })
-export const clearFavouriteTrips = () => ({ type: CLEAR_FAV_TRIPS })
+export const setFavouriteTrips = trips => ({ type: SET_FAV_TRIPS, payload: trips })

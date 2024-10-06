@@ -29,7 +29,7 @@ export default StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
     },
-
+    heading: { fontSie: 15, color: colours.primary, fontWeight: 'bold' },
     center: { marginLeft: 'auto', marginRight: 'auto' },
     fill: { flexGrow: 1 },
     nextStopHeader: {

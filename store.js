@@ -91,10 +91,10 @@ const reducer = (state = initialState, action) => {
             favTrips: []
         }
         
-    case actions.ADD_FAV_TRIPS:
+    case actions.SET_FAV_TRIPS:
         return {
             ...state,
-            favTrips: [ ...state.favTrips, ...action.payload ]
+            favTrips: action.payload,
         }
 
         default:

@@ -5,15 +5,17 @@ import { SafeAreaView, View, Text, Button } from 'react-native'
 import styles, { colours } from './styles'
 import store from './store'
 import { reset } from './actions'
-import { START, NEXT_STOP } from './views'
+import { START, NEXT_STOP, RUNNING_TRIPS } from './views'
 import Start from './Start'
 import NextStop from './NextStop'
+import RunningTrips from './RunningTrips'
 import ButtonTransparent from './ButtonTransparent'
 
 // view map
 const viewMap = {
     [START]: Start,
-    [NEXT_STOP]: NextStop
+    [NEXT_STOP]: NextStop,
+    [RUNNING_TRIPS]: RunningTrips,
 }
 
 // header component

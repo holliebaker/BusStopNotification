@@ -31,14 +31,15 @@ const pluralise = (num, singular, plural) =>
     `${num} ${Math.abs(num) == 1 ? singular : plural}`
 
 const getUpcomingStops = (stops, progress) => {
-    if (!progress) return stops
+    // no tracking or too early to track
+    if (!progress || progress.delay < -600) return stops
 
     const now = Date.now() // milliseconds since unix epoch
     const today = new Date() // today's date object
     let calculateTimings = true // whether to calculate timings -- we only do next 10 minutes
 
-    const stopIndex = stops.findIndex(({ atcoCode }) => atcoCode == progress.nextStop)
-
+    // find the stop
+    const stopIndex = stops.findIndex(({ atcoCode }) => atcoCode === progress.nextStop)
     return stops.slice(stopIndex).map(stop => {
         if (!calculateTimings) return stop
 
@@ -102,9 +103,11 @@ const Stop = ({ item, index }) => (
         </View>
 
         <View>
-            <Text>{item.minutes && (item.minutes < 1 ? 'Due' : (item.minutes + ' min'))}</Text>
+            {item.minutes !== undefined &&
+                <Text>{item.minutes < 1 ? 'Due' : item.minutes + ' min'}</Text>
+            }
 
-            <Text style={item.minutes && styles.textSecondary}>{item.time}</Text>
+            <Text style={item.minutes !== undefined && styles.textSecondary}>{item.time}</Text>
         </View>
     </View>
 )
